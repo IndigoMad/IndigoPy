@@ -1,0 +1,13 @@
+MANIFEST.in
+README.md
+setup.py
+Doc/documentation.txt
+IndigoPy/__init__.py
+IndigoPy.egg-info/PKG-INFO
+IndigoPy.egg-info/SOURCES.txt
+IndigoPy.egg-info/dependency_links.txt
+IndigoPy.egg-info/top_level.txt
+IndigoPy/GUI/Formal.py
+IndigoPy/GUI/__init__.py
+IndigoPy/Protein/__init__.py
+IndigoPy/Protein/pdb.py

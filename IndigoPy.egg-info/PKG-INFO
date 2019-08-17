@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: IndigoPy
+Version: 0.0.1a1
+Summary: Just A test now
+Home-page: https://github.com/IndigoMad/IndigoPy.git
+Author: Indigo Mad
+Author-email: indigomad@pku.edu.cn
+License: UNKNOWN
+Description: # IndigoPy
+        This is just a test version. Don't use it
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
