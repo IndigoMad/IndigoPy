@@ -1,3 +1,5 @@
-include *.txt
-recursive-include examples *
-recursive-include Doc *
+include *.md
+include LICENSE
+include Doc
+
+
