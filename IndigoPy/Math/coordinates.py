@@ -2,43 +2,69 @@
 # -*- coding: UTF-8-*-
 
 import math
+import numpy as np
+import numpy.linalg
+
+
+def make_basis_matrix(basis):
+	return np.mat([[basis[0][0],basis[1][0],basis[2][0]],[basis[0][1],basis[1][1],basis[2][1]],[basis[0][2],basis[1][2],basis[2][2]]])
+
 
 #Position can be a point or a vector
 class Position():
 	def __init__(self,pos):
-		self.pos=list(pos)
+		self.pos=np.mat([[pos[0]],[pos[1]],[pos[2]]])
 	def __getitem__(self, key):
-		return self.pos[key]
+		return self.pos[key,0]
 	def __setitem__(self, key, value):
 		self.pos[key]=value
 	def __iter__(self):
-		return iter(self.pos)
+		return iter([self[0],self[1],self[2]])
 
 	def __sub__(self, other):
+		if isinstance(other,np.matrix):
+			temm=self.pos-other
+			return Position((temm[0,0],temm[1,0],temm[2,0]))
 		try:
 			tem=other[0]
 			return Position((self[0]-other[0],self[1]-other[1],self[2]-other[2]))
 		except:
 			return NotImplemented
 	def __rsub__(self, other):
+		if isinstance(other,np.matrix):
+			temm=other-self.pos
+			return Position((temm[0,0],temm[1,0],temm[2,0]))
 		return Position((other[0]-self[0],other[1]-self[1],other[2]-self[2]))
+
+
 	def __add__(self, other):
+		if isinstance(other,np.matrix):
+			temm=self.pos+other
+			return Position((temm[0,0],temm[1,0],temm[2,0]))
 		try:
 			tem=other[0]
 			return Position((self[0]+other[0],self[1]+other[1],self[2]+other[2]))
 		except:
 			return NotImplemented
 	def __radd__(self, other):
+		if isinstance(other,np.matrix):
+			temm=other+self.pos
+			return Position((temm[0,0],temm[1,0],temm[2,0]))
 		return Position((other[0]+self[0],other[1]+self[1],other[2]+self[2]))
 
 	# value*Position,Position*value and Position/value is a multiplying or dividing. Position_A*Position_A is the dot product of the two vector
 	def __mul__(self, other):
+		if isinstance(other,np.matrix):
+			return self.pos*other
 		try: 
 			tem=other[0]
 			return self[0]*other[0]+self[1]*other[1]+self[2]*other[2]
 		except:
 			return Position((self[0]*other,self[1]*other,self[2]*other))
 	def __rmul__(self, other):
+		if isinstance(other,np.matrix):
+			temm=other*self.pos
+			return Position((temm[0,0],temm[1,0],temm[2,0]))
 		try: 
 			tem=other[0]
 			return other[0]*self[0]+other[1]*self[1]+other[2]*self[2]
@@ -66,7 +92,17 @@ class Position():
 	def unit(self):
 		return self/abs(self)
 	def __str__(self):
-		return str(tuple(self.pos))
+		return str((self[0],self[1],self[2]))
+
+# basis is a list of Positions or coordinates, or you can give a matrix or a inversed matrix.
+	def linear_trans(self,basis,inverse=False):
+		if isinstance(basis,np.matrix)==False:
+			tem=np.mat([[basis[0][0],basis[1][0],basis[2][0]],[basis[0][1],basis[1][1],basis[2][1]],[basis[0][2],basis[1][2],basis[2][2]]])
+		else:
+			tem=basis
+		if inverse==False:
+			tem=np.linalg.inv(tem)
+		return tem*self
 
 
 class Plane():

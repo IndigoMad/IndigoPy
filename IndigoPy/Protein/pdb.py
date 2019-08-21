@@ -13,6 +13,8 @@ t3t1={'GLY':'G','ALA':'A','VAL':'V','LEU':'L','ILE':'I','PHE':'F','PRO':'P','SER
 #=========||||||==||||====||======||==||==||||||==||||||==||======||||||====||======||====||||====||======||||||=========
 #=========||==||==||||||==||||||==||||====||||||==||======||||====||==||====||====||||====||==||==||||||==||||||=========
 #========================================================================================================================
+#===============================================Indigo Mad  vesion 0.01a1================================================
+#========================================================================================================================
 #=========||||||==||||||==||||======||||==||||======||||==||||||==||==||==||==||==||||||==||==||==||==||==||||===========
 #=========||==||==||==||==||||======||||==||||======||======||====||==||==||==||==||||||====||======||======||===========
 #=========||==||==||||||==||==========||==||==||==||||======||====||||||====||====||==||==||==||====||======||||=========
@@ -523,6 +525,9 @@ class Protein():
 #A class for screening
 class ProteinS():
 	def __init__(self,pdbid=None,**kargs):
+		debug=kargs.get('debug',False)
+		if debug==True:
+			print('#### Debug Mode Start')
 		if pdbid!=None:#It's a pdb ID, download it from the website.
 			url='https://files.rcsb.org/download/'+pdbid+'.pdb'
 			with request.urlopen(url) as f:
@@ -534,6 +539,8 @@ class ProteinS():
 				self.name=kargs['name']
 			except:
 				self.name=pdbid
+			if debug==True:
+				print('#### Start processing '+pdbid+' - '+self.name)
 		else:
 			try:
 				f=kargs['file']
@@ -544,7 +551,8 @@ class ProteinS():
 					print('[Warning]Can not find the name of this protein, which can given by the argument: name=[the name of the protein]')
 			except:
 				raise Exception('pdb ID should be given or pass a string of pdb file with the argument: file=[the given string]')
-
+			if debug==True:
+				print('#### Start processing '+self.name)
 		self.J=True
 		self.lines=f.split("\n")
 		self.models=[]
@@ -553,6 +561,8 @@ class ProteinS():
 		modelendlist=[]
 		self.score=None
 		#===================Preprocess Conditions=====================
+		if debug==True:
+			print('#### Preprocess Conditions')
 		try:
 			conditions=kargs['precon']
 		except:
@@ -570,6 +580,8 @@ class ProteinS():
 		#===================Preprocess: Chunks Incision=====================
 		#models incision
 		if self.J==True:
+			if debug==True:
+				print('#### Preprocessing')
 			for i in range(len(self.lines)):
 				if self.lines[i].find('HELIX')==0:
 					self.helixes.append(Helix(self.lines[i]))
@@ -624,7 +636,10 @@ class ProteinS():
 								residuestem.append(i[j][k])
 					i[j]=chaintem
 
+
 			#==================Atoms Building Conditions======================
+			if debug==True:
+				print('#### Atoms Building Conditions')
 			try:
 				conditions=kargs['atmcon']
 			except:
@@ -640,7 +655,10 @@ class ProteinS():
 							self.J=False
 							break
 			#==================Atoms Building======================
+
 			if self.J==True:
+				if debug==True:
+					print('#### Building Atoms')
 				for m in range(len(self.models)):
 					clist=[]
 					for c in self.models[m]:
@@ -655,6 +673,8 @@ class ProteinS():
 						clist.append(Chain(cname,rlist))
 					self.models[m]=Model(clist)
 				#=======================Secondary Structure Building=================
+				if debug==True:
+					print('#### Building Secondary Structures')
 				#preprocess: chunks incision
 				#sheet groups incision
 				temlastlist=[]
@@ -679,8 +699,11 @@ class ProteinS():
 						self.sheets[i]=Sheet(self,self.sheets[i])
 
 
+
 				
 				#==================Scoring======================	
+				if debug==True:
+					print('#### Scoring')
 				try:
 					scoring=kargs['score']
 				except:
@@ -698,6 +721,8 @@ class ProteinS():
 
 				#==================Download======================	
 				if self.J==True:
+					if debug==True:
+						print('#### Downloading')
 					try:
 						downloadpath=kargs['path']
 					except:
@@ -706,7 +731,15 @@ class ProteinS():
 						fso = open(downloadpath, 'w')
 						fso.write(f)
 						fso.close()
-
+				else:
+					if debug==True:
+						print('#### Conditions are not met, the downloading is aborted')
+			else:
+				if debug==True:
+					print('#### Conditions are not met, the atoms building is aborted')
+		else:
+			if debug==True:
+				print('#### Conditions are not met, the preprocessing is aborted')
 
 
 	def __getitem__(self, key):
