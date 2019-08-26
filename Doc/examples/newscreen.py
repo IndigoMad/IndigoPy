@@ -290,7 +290,7 @@ sshill=fmk.combinefunc(((0,0.9),(fmk.hill(2, 0, 0.9, halflife=1, point1=(5,1.5))
 
 
 #===========================================Real Screen!!!!!!================================================
-screenlist=pypdb.get_all()[:80000]
+screenlist=pypdb.get_all()
 screennum=len(screenlist)
 for num in range(screennum):
 	try:

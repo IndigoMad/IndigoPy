@@ -104,6 +104,18 @@ class Position():
 			tem=np.linalg.inv(tem)
 		return tem*self
 
+	def rot_matrix(self,target):
+		ca=(self*target)/abs(self)/abs(target)
+		sa=math.sqrt(1-ca*ca)
+		rv=(self**target).unit()
+		x=rv[0]
+		y=rv[1]
+		z=rv[2]
+		temmat=[[ca+(1-ca)*x*x, (1-ca)*x*y-sa*z, (1-ca)*x*z+sa*y],
+		[(1-ca)*x*y+sa*z, ca+(1-ca)*y*y, (1-ca)*y*z-sa*x],
+		[(1-ca)*x*z-sa*y, (1-ca)*z*y+sa*x, ca+(1-ca)*z*z]]
+		return np.mat(temmat)
+
 
 class Plane():
 	def __init__(self, plane, warn=0):
@@ -153,3 +165,22 @@ class Plane():
 		return Position((ln*self.normal[0]+other[0],ln*self.normal[1]+other[1],ln*self.normal[2]+other[2]))
 
 	# [Warning][] This function has a Low Precision, rewrite it with a higher one or just pass a argument 'warn=0' to ignore this warning.
+
+
+
+
+
+def rotation(fixpoint, axis, cosa):
+	ca=cosa
+	sa=math.sqrt(1-ca*ca)
+	rv=axis.unit()
+	x=rv[0]
+	y=rv[1]
+	z=rv[2]
+	temmat=np.mat([[ca+(1-ca)*x*x, (1-ca)*x*y-sa*z, (1-ca)*x*z+sa*y],
+	[(1-ca)*x*y+sa*z, ca+(1-ca)*y*y, (1-ca)*y*z-sa*x],
+	[(1-ca)*x*z-sa*y, (1-ca)*z*y+sa*x, ca+(1-ca)*z*z]])
+
+	def outfunc(aposition):
+		return temmat*(aposition-fixpoint)+fixpoint
+	return outfunc

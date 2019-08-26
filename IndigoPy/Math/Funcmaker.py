@@ -21,7 +21,7 @@ def quadratic(intercept_left,extremum,intercept_right):
 		return a*ainput*ainput+b*ainput+c
 	return outfunc
 
-def hill(aMax, amin, startpoint, **kargs):
+def hill(aMax, amin, startingpoint, **kargs):
 	H=aMax-amin
 	reverse=kargs.get('reverse',(False))
 	hill_coefficient=kargs.get('hill_coefficient',None)
@@ -35,23 +35,23 @@ def hill(aMax, amin, startpoint, **kargs):
 				B=kargs['point2'][1]
 			except:
 				raise ValueError("You must give two points(argument 'point1' and 'point2' in tuple) on the curve if you don't give a halflife and a hill coefficient")
-			a=a-startpoint
-			b=b-startpoint
+			a=a-startingpoint
+			b=b-startingpoint
 			A=(A-amin)/H
 			B=(B-amin)/H
 			if reverse==False:
 				hill_coefficient=math.log(((1-B)*A)/((1-A)*B),a/b)
-				halflife=(((1-A)/A)**(1/hill_coefficient))*a-startpoint
+				halflife=(((1-A)/A)**(1/hill_coefficient))*a-startingpoint
 				def outfunc(ainput):
-					return amin+H*((ainput-startpoint)**hill_coefficient)/(((ainput-startpoint)**hill_coefficient)+(halflife**hill_coefficient))
+					return amin+H*((ainput-startingpoint)**hill_coefficient)/(((ainput-startingpoint)**hill_coefficient)+(halflife**hill_coefficient))
 				return outfunc
 			else:
 				A=1-((A-amin)/H)
 				B=1-((B-amin)/H)
 				hill_coefficient=math.log(((1-B)*A)/((1-A)*B),a/b)
-				halflife=(((1-A)/A)**(1/hill_coefficient))*a-startpoint
+				halflife=(((1-A)/A)**(1/hill_coefficient))*a-startingpoint
 				def outfunc(ainput):
-					return amin+H*(halflife**hill_coefficient)/(((ainput-startpoint)**hill_coefficient)+(halflife**hill_coefficient))
+					return amin+H*(halflife**hill_coefficient)/(((ainput-startingpoint)**hill_coefficient)+(halflife**hill_coefficient))
 				return outfunc
 		else:
 			try:
@@ -59,49 +59,49 @@ def hill(aMax, amin, startpoint, **kargs):
 				A=kargs['point1'][1]
 			except:
 				raise ValueError("You must give one points(argument 'point1' in tuple) on the curve if you don't give a halflife")
-			a=a-startpoint
+			a=a-startingpoint
 			A=(A-amin)/H
 			if reverse==False:
-				halflife=(((1-A)/A)**(1/hill_coefficient))*a-startpoint
+				halflife=(((1-A)/A)**(1/hill_coefficient))*a-startingpoint
 				def outfunc(ainput):
-					return amin+H*((ainput-startpoint)**hill_coefficient)/(((ainput-startpoint)**hill_coefficient)+(halflife**hill_coefficient))
+					return amin+H*((ainput-startingpoint)**hill_coefficient)/(((ainput-startingpoint)**hill_coefficient)+(halflife**hill_coefficient))
 				return outfunc
 			else:
 				A=1-((A-amin)/H)
 				B=1-((B-amin)/H)
-				halflife=(((1-A)/A)**(1/hill_coefficient))*a-startpoint
+				halflife=(((1-A)/A)**(1/hill_coefficient))*a-startingpoint
 				def outfunc(ainput):
-					return amin+H*(halflife**hill_coefficient)/(((ainput-startpoint)**hill_coefficient)+(halflife**hill_coefficient))
+					return amin+H*(halflife**hill_coefficient)/(((ainput-startingpoint)**hill_coefficient)+(halflife**hill_coefficient))
 				return outfunc
 	else:
-		halflife-=startpoint
+		halflife-=startingpoint
 		if hill_coefficient==None:
 			try:
 				a=kargs['point1'][0]
 				A=kargs['point1'][1]
 			except:
 				raise ValueError("You must give two points(argument 'point1' and 'point2' in tuple) on the curve if you don't give a halflife and a hill coefficient")
-			a=a-startpoint
+			a=a-startingpoint
 			A=(A-amin)/H
 			if reverse==False:
 				hill_coefficient=math.log(((1-A)/A),halflife/a)
 				def outfunc(ainput):
-					return amin+H*((ainput-startpoint)**hill_coefficient)/(((ainput-startpoint)**hill_coefficient)+(halflife**hill_coefficient))
+					return amin+H*((ainput-startingpoint)**hill_coefficient)/(((ainput-startingpoint)**hill_coefficient)+(halflife**hill_coefficient))
 				return outfunc
 			else:
 				A=1-((A-amin)/H)
 				hill_coefficient=math.log(((1-A)/A),halflife/a)
 				def outfunc(ainput):
-					return amin+H*(halflife**hill_coefficient)/(((ainput-startpoint)**hill_coefficient)+(halflife**hill_coefficient))
+					return amin+H*(halflife**hill_coefficient)/(((ainput-startingpoint)**hill_coefficient)+(halflife**hill_coefficient))
 				return outfunc
 		else:
 			if reverse==False:
 				def outfunc(ainput):
-					return amin+H*((ainput-startpoint)**hill_coefficient)/(((ainput-startpoint)**hill_coefficient)+(halflife**hill_coefficient))
+					return amin+H*((ainput-startingpoint)**hill_coefficient)/(((ainput-startingpoint)**hill_coefficient)+(halflife**hill_coefficient))
 				return outfunc
 			else:
 				def outfunc(ainput):
-					return amin+H*(halflife**hill_coefficient)/(((ainput-startpoint)**hill_coefficient)+(halflife**hill_coefficient))
+					return amin+H*(halflife**hill_coefficient)/(((ainput-startingpoint)**hill_coefficient)+(halflife**hill_coefficient))
 				return outfunc
 
 
@@ -172,7 +172,7 @@ def move(inputfunc, distance, reflect=1):
 #option: 
 #	0b1    no scaling
 #	0b10   don't move
-#pass a tuple like that ((function1,stop1,reflect1),(constant,stop2),(function2,stop3,reflect3,option(this is optional)),(function3,start,reflect4)
+#pass a tuple like that ((function1,end1,reflect1),(constant,end2),(function3,end3,reflect3,option(this is optional)),(function4,beg4,reflect4)
 def combinefunc(functionlist):
 	length=len(functionlist)-1
 	def outfunc(ainput):
